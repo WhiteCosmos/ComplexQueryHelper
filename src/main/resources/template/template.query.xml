@@ -1,0 +1,11 @@
+<!DOCTYPE querys SYSTEM "query.dtd">
+<querys>
+    <query key="define.your.sql.key.here" processor="velocity">
+        <value><![CDATA[
+
+            ]]></value>
+        <comments>
+
+        </comments>
+    </query>
+</querys>
