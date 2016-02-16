@@ -93,12 +93,12 @@ public class ComplexQueryHelperDefault implements ComplexQueryHelper, Applicatio
 		Velocity.init();
 
 		/** Initialize all sql definition */
-		this.initializeSQL(applicationContext);
+		this.initializeSQL();
 		/** Initialize all datasource */
 		this.initializeDataSource(applicationContext);
 	}
 
-	private void initializeSQL(ApplicationContext applicationContext) {
+	private void initializeSQL() {
 		SAXReader saxReader = new SAXReader();
 		/** Ignore DTD verify */
 		saxReader.setEntityResolver(new EntityResolver() {
@@ -192,8 +192,6 @@ public class ComplexQueryHelperDefault implements ComplexQueryHelper, Applicatio
 	private static final Map<String, String>       MAP_QUERY_TO_DATASOURCE        = new HashMap<>();
 	/** 每个DataSource和JdbcTemplate的对应关系 中间缓存 */
 	private static final Map<String, JdbcTemplate> MAP_DATASOURCE_TO_JDBCTEMPLATE = new HashMap<>();
-	/** 每个实体名称到jdbcTemplate的对应关系 */
-	private static final Map<String, JdbcTemplate> MAP_ENTITY_TO_JDBCTEMPLATE     = new HashMap<>();
 
 	/** SQL Cache */
 	private static Map<String, String> SQL_CACHE = new HashMap<>();
@@ -202,8 +200,6 @@ public class ComplexQueryHelperDefault implements ComplexQueryHelper, Applicatio
 
 	/** Default Datasource name */
 	private static final String DEFAULT_DATASOURCE = "dataSource";
-	/** MAX_LO in Hilo */
-	private static final Long   MAX_LO             = 1L;
 	/** Default Query File Path */
 	private static final String QUERY_FILE_PATH    = "classpath*:/query/*.query.xml";
 	/** VELOCITY Processor Name */
@@ -687,8 +683,6 @@ public class ComplexQueryHelperDefault implements ComplexQueryHelper, Applicatio
 			}
 
 			builder.append(",");
-
-
 		}
 
 		return builder.toString();
@@ -986,16 +980,6 @@ public class ComplexQueryHelperDefault implements ComplexQueryHelper, Applicatio
 
 	private JdbcTemplate getJdbcTemplate(String sqlKey) {
 		JdbcTemplate jdbcTemplate = MAP_QUERY_TO_JDBCTEMPLATE.get(sqlKey);
-
-		if (jdbcTemplate == null) {
-			return MAP_DATASOURCE_TO_JDBCTEMPLATE.get(DEFAULT_DATASOURCE);
-		}
-
-		return jdbcTemplate;
-	}
-
-	private JdbcTemplate getJdbcTemplate(Class entity) {
-		JdbcTemplate jdbcTemplate = MAP_ENTITY_TO_JDBCTEMPLATE.get(entity.getCanonicalName());
 
 		if (jdbcTemplate == null) {
 			return MAP_DATASOURCE_TO_JDBCTEMPLATE.get(DEFAULT_DATASOURCE);
